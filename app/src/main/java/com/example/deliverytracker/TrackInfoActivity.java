@@ -23,6 +23,7 @@ import com.example.deliverytracker.Services.DatabaseHelper;
 import com.example.deliverytracker.Services.NotificationHelper;
 import com.example.deliverytracker.Services.TrackParser;
 import com.example.deliverytracker.Services.TrackingApiService;
+import com.example.deliverytracker.Services.TrackingNumberValidator;
 import com.example.deliverytracker.Services.TrackingRepository;
 import com.example.deliverytracker.models.TrackData;
 import com.example.deliverytracker.models.TrackResponse;
@@ -69,10 +70,14 @@ public class TrackInfoActivity extends AppCompatActivity
                 String packageNumber = packageNumberInput.getText().toString();
 
                 // Логика для получения данных о посылке (это просто пример)
-                if (!packageNumber.isEmpty()) {
-                    repository.fetchTrackingData("RB287529899RU", new TrackingRepository.TrackingDataCallback() {
+                if (!packageNumber.isEmpty() && TrackingNumberValidator.check(packageNumber)) {
+
+                    repository.fetchTrackingData(packageNumber, new TrackingRepository.TrackingDataCallback() {
                         @Override
                         public void onSuccess(TrackResponse response) {
+                            if(!response.status.equals("ok"))
+                                Toast.makeText(TrackInfoActivity.this,response.message,Toast.LENGTH_LONG).show();
+                            System.out.println("Post execute");
                             boolean rewrite=false;
                             if(response.data.awaitingStatus.equals("1")){
                                 NotificationHelper.sendNotification(TrackInfoActivity.this, "Tracking Update", "Your package has arrived!");
@@ -133,11 +138,15 @@ public class TrackInfoActivity extends AppCompatActivity
                         @Override
                         public void onError(Throwable t) {
                             Log.e("TrackInfo", "Error: " + t.getMessage());
+
                         }
                     });
 
 
 
+                }else{
+                    Toast.makeText(TrackInfoActivity.this,"Track number is invalid",Toast.LENGTH_LONG).show();
+                    System.out.println("Post Track number is invalid\t"+packageNumber);
                 }
 
             }

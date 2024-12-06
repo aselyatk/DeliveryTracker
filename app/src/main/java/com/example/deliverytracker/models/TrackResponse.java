@@ -7,4 +7,6 @@ public class TrackResponse {
     public String status;
     @SerializedName("data")
     public TrackData data;
+    @SerializedName("message")
+    public String message;
 }
