@@ -1,0 +1,31 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Основная тема приложения -->
+    <style name="Theme.MyApp" parent="Theme.Material3.DayNight">
+        <!-- Цветовая палитра -->
+        <item name="colorPrimary">@color/soft_blue</item>
+        <item name="colorPrimaryContainer">@color/soft_blue_light</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="colorSecondary">@color/soft_green</item>
+        <item name="colorSecondaryContainer">@color/soft_green_light</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/dark_gray</item>
+
+        <item name="colorError">@color/soft_red</item>
+        <item name="colorOnError">@color/white</item>
+
+        <!-- Шрифты -->
+
+        <item name="textAppearanceButton">@style/TextAppearance.Material3.LabelLarge</item>
+
+        <!-- Округленные углы -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Material3.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Material3.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Material3.LargeComponent</item>
+    </style>
+
+</resources>
