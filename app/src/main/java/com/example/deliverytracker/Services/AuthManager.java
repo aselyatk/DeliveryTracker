@@ -16,7 +16,7 @@ public class AuthManager {
 
     // Конструктор
     public AuthManager(Context context) {
-        FirebaseApp.initializeApp(context);
+
         this.mAuth = FirebaseAuth.getInstance();
         this.context = context;
     }
