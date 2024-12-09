@@ -7,12 +7,18 @@
     android:padding="16dp">
 
     <!-- Лейбл и поле ввода для номера посылки -->
-
+    <TextView
+        android:id="@+id/emailView"
+        android:layout_marginLeft="130dp"
+        android:layout_marginTop="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:textSize="24dp"
+        android:text="Login"/>
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
-        android:layout_marginTop="100dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailInput"
@@ -51,7 +57,7 @@
         android:id="@+id/go_to_registerButton"
         android:layout_width="350dp"
         android:layout_height="70dp"
-        android:text="Register"
+        android:text="no account (register)"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"
         android:layout_marginBottom="16dp" />

@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:textSize="24dp"
-        android:text="User email scorpik1992@gmail.com"/>
+        android:text="User email :"/>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/Go_AppButton"
         android:layout_width="350dp"
@@ -42,5 +42,5 @@
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"
         android:layout_marginBottom="20dp"
-        android:layout_marginTop="120dp"/>
+        android:layout_marginTop="10dp"/>
 </LinearLayout>

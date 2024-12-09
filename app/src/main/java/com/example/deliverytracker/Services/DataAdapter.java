@@ -61,6 +61,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
             intent.putExtra("deliveryService", data.lastPoint.serviceName); // Передаём объект события
             context.startActivity(intent);
         });
+
     }
 
     @Override
@@ -71,10 +72,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
     static class DataViewHolder extends RecyclerView.ViewHolder {
         TextView trackingNumberTextView, deliveryServiceTextView, eventsTextView;
         Button btnDetails;
+
         public DataViewHolder(@NonNull View itemView) {
             super(itemView);
             trackingNumberTextView = itemView.findViewById(R.id.trackingNumberTextView);
             btnDetails=itemView.findViewById(R.id.btnDetails);
+
             eventsTextView = itemView.findViewById(R.id.eventsTextView);
         }
     }

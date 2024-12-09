@@ -1,15 +1,17 @@
 package com.example.deliverytracker;
 
-import static android.app.PendingIntent.getActivity;
+
+
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +62,8 @@ public class TrackInfoActivity extends AppCompatActivity
             recyclerView.setAdapter(dataAdapter);
 
         }
-
+        Button showDialogButton = findViewById(R.id.menuButton);
+        showDialogButton.setOnClickListener(v -> showCustomDialog());
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,6 +161,34 @@ public class TrackInfoActivity extends AppCompatActivity
         });
 
 
+    }
+    private void showCustomDialog() {
+        // Создаем диалог
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_layout, null);
+        builder.setView(dialogView);
+
+        // Настраиваем кнопки и текст
+        TextView dialogText = dialogView.findViewById(R.id.dialog_text);
+        Button dialogLink = dialogView.findViewById(R.id.dialog_link);
+        Button deleteLink = dialogView.findViewById(R.id.DeleteLink);
+
+        dialogLink.setOnClickListener(v -> {
+            // Переход в другую Activity
+            Intent intent = new Intent(TrackInfoActivity.this, ProfileActivity.class);
+            startActivity(intent);
+        });
+        deleteLink.setOnClickListener(v -> {
+            // Переход в другую Activity
+            databaseHelper.deleteAllRecords();
+            List<TrackData> dataList = databaseHelper.getAllDataWithEvents();
+            dataAdapter.setdataList(dataList);
+            dataAdapter.notifyDataSetChanged();
+        });
+        // Отображаем диалог
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

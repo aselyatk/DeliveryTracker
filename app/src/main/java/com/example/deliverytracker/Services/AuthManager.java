@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.google.firebase.FirebaseApp;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -32,7 +32,7 @@ public class AuthManager {
                         sendEmailVerification();
                         Toast.makeText(context, "Регистрация успешна: " + user.getEmail(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(context, "Ошибка регистрации: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Ошибка регистрации: проверьте  логин" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -50,7 +50,7 @@ public class AuthManager {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(intent);
                     } else {
-                        Toast.makeText(context, "Ошибка входа: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Ошибка входа: неправельный пароль или логин" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

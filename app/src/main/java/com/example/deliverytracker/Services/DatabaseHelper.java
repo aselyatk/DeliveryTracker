@@ -53,7 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_OPERATION_TYPE + " TEXT, " +
                 COLUMN_LOCATION + " TEXT, " +
                 COLUMN_DATA_ID + " TEXT, " +
-                "FOREIGN KEY(" + COLUMN_DATA_ID + ") REFERENCES " + TABLE_DATA + "(" + COLUMN_TRACKING_NUMBER + "))";
+                "FOREIGN KEY(" + COLUMN_DATA_ID + ") REFERENCES " + TABLE_DATA + "(" + COLUMN_TRACKING_NUMBER + ") ON DELETE CASCADE)";
 
         db.execSQL(createDataTable);
         db.execSQL(createEventsTable);
@@ -66,6 +66,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public boolean deleteRecordById(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(TABLE_DATA, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+        return rowsDeleted > 0;
+    }
+    public boolean deleteAllRecords() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(TABLE_DATA, null, null);
+        db.close();
+        return rowsDeleted > 0;
+    }
     // Сохранение данных в таблицу data
     public long insertData(TrackData data) {
         SQLiteDatabase db = this.getWritableDatabase();

@@ -28,7 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
         Button goToAppButton = findViewById(R.id.Go_AppButton);
 
         // Отображаем email текущего пользователя
-        String email = getIntent().getStringExtra("deliveryService");
+        String email = authManager.getCurrentUser().getEmail();
         if (email!=null) {
             userEmail.setText("Email: " + email);
         }

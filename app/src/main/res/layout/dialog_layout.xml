@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/dialog_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Меню"
+        android:gravity="center_vertical|center_horizontal"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/dialog_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Перейти в профиль"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="16dp" />
+    <Button
+        android:id="@+id/DeleteLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Удалитьвсе записи"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

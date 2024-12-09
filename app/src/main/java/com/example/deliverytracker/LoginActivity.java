@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         // Переход к экрану регистрации
         goToRegisterButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, RegisterActivity.class);
+
             startActivity(intent);
             finish();
         });
