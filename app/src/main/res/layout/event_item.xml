@@ -9,9 +9,8 @@
 
     <ImageView
         android:id="@+id/arrowIcon"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:src="@drawable/arrow_down"
         android:scaleType="fitXY"
         />
@@ -20,7 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corners"
-
         android:orientation="vertical">
 
         <TextView
@@ -30,6 +28,7 @@
             android:layout_margin="5dp"
             android:layout_marginBottom="4dp"
             android:text="Дата"
+            android:textStyle="bold"
             android:textColor="@color/cardview_light_background"
             android:textSize="14sp" />
 
@@ -40,6 +39,7 @@
             android:layout_margin="5dp"
             android:layout_marginBottom="4dp"
             android:text="Служба"
+            android:textStyle="bold"
             android:textColor="@color/cardview_light_background"
             android:textSize="14sp" />
 

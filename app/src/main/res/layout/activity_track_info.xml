@@ -11,12 +11,13 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/menuButton"
         style="@style/Widget.Material3.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginTop="50dp"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
         android:gravity="center_vertical|center_horizontal"
         android:text="..."
-        android:textSize="30sp" />
+        android:textSize="20sp"
+        />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -36,6 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Поиск"
+        android:textSize="18sp"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"
         android:layout_marginBottom="16dp" />
