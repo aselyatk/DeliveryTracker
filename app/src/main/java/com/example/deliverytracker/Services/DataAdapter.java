@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.app.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,9 +34,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
     }
     public void setdataList(List<TrackData> dataList){
         this.dataList = dataList;
-        this.dataListFull = new ArrayList<>(dataList); // обновляем и полный!
+        this.dataListFull = new ArrayList<>(dataList);
         notifyDataSetChanged();
     }
+
     @NonNull
     @Override
     public DataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -51,6 +53,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 
         holder.trackingNumberTextView.setText("Tracking: " + data.trackCode);
 
+        if (data.userLabel != null && !data.userLabel.isEmpty()) {
+            holder.trackingNumberTextView.setText(data.userLabel + " (" + data.trackCode + ")");
+        } else {
+            holder.trackingNumberTextView.setText("Tracking: " + data.trackCode);
+        }
 
         // События
         StringBuilder eventsBuilder = new StringBuilder();
@@ -64,10 +71,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
         holder.eventsTextView.setText(eventsBuilder.toString());
         holder.btnDetails.setOnClickListener(v -> {
             Intent intent = new Intent(context, EventDetailsActivity.class);
-            intent.putExtra("events", data.events); // Передаём объект события
-            intent.putExtra("deliveryService", data.lastPoint.serviceName); // Передаём объект события
-            context.startActivity(intent);
+            intent.putExtra("events", data.events);
+            intent.putExtra("deliveryService", data.lastPoint.serviceName);
+            intent.putExtra("trackCode", data.trackCode);
+            ((Activity) context).startActivityForResult(intent, 123);
         });
+
 
         holder.btnDelete.setOnClickListener(v -> {
             // Удаление из БД

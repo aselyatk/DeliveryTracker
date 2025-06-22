@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "tracking.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     // Таблица для хранения данных
     private static final String TABLE_DATA = "data";
@@ -29,7 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_OPERATION_DATE = "operation_date";
     private static final String COLUMN_LOCATION = "location";
     private static final String COLUMN_AWAITING = "awaiting";
-
+    private static final String COLUMN_USER_LABEL = "user_label"; // новое поле
     private static final String COLUMN_DATA_ID = "data_id"; // внешний ключ на data
 
     public DatabaseHelper(Context context) {
@@ -39,15 +39,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createDataTable = "CREATE TABLE " + TABLE_DATA + " (" +
-                COLUMN_TRACKING_NUMBER + " TEXT PRIMARY KEY, " +
+                COLUMN_TRACKING_NUMBER + " TEXT, " +
                 COLUMN_DELIVERY_SERVICE + " TEXT, " +
                 COLUMN_OPERATION_TYPE + " TEXT, " +
                 COLUMN_OPERATION_DATE + " TEXT, " +
                 COLUMN_LOCATION + " TEXT, " +
-                COLUMN_AWAITING + " TEXT)";
+                COLUMN_AWAITING + " TEXT, " +
+                COLUMN_USER_LABEL + " TEXT)"; // добавлено!
+
 
         String createEventsTable = "CREATE TABLE " + TABLE_EVENTS + " (" +
-                COLUMN_EVENT_ID + "  TEXT PRIMARY KEY , " +
+                COLUMN_EVENT_ID + "  TEXT, " +
                 COLUMN_EVENT_DATE + " TEXT, " +
                 COLUMN_SERVICE_NAME + " TEXT, " +
                 COLUMN_OPERATION_TYPE + " TEXT, " +
@@ -65,6 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DATA);
         onCreate(db);
     }
+
 
     public boolean deleteRecordById(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -88,6 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_LOCATION, data.lastPoint.operationPlaceName);
         values.put(COLUMN_OPERATION_DATE, data.lastPoint.operationDateTime);
         values.put(COLUMN_AWAITING, data.awaitingStatus);
+        values.put(COLUMN_USER_LABEL, data.userLabel);
         long id = db.insert(TABLE_DATA, null, values);
         db.close();
         return id;
@@ -100,6 +104,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_OPERATION_TYPE, data.lastPoint.operationAttribute);
         values.put(COLUMN_OPERATION_DATE, data.lastPoint.operationDateTime);
         values.put(COLUMN_LOCATION, data.lastPoint.operationPlaceName);
+        values.put(COLUMN_USER_LABEL, data.userLabel);
 
         // Обновление строки по id
         int rowsUpdated = db.update(
@@ -152,6 +157,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateUserLabel(String trackCode, String userLabel) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_LABEL, userLabel);
+        db.update(TABLE_DATA, values, COLUMN_TRACKING_NUMBER + "=?", new String[]{trackCode});
+        db.close();
+    }
+
+
     public void deleteTrackByCode(String trackCode) {
         SQLiteDatabase db = this.getWritableDatabase();
         // Удаляем сначала связанные события
@@ -170,7 +184,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         List<TrackData> dataList = new ArrayList<>();
 
-        String query = "SELECT  d.tracking_number, d.delivery_service, d.operation_type as last_operation_type,d.operation_date as last_operation_date,d.location as last_location, d.awaiting," +
+        String query = "SELECT  d.tracking_number, d.delivery_service, d.operation_type as last_operation_type, d.operation_date as last_operation_date, d.location as last_location, d.awaiting, d.user_label," +
                 "e.id AS event_id, e.event_date, e.service_name, e.operation_type, e.location " +
                 "FROM data d " +
                 "LEFT JOIN events e ON d.tracking_number = e.data_id";
@@ -197,6 +211,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             lastpont
                     );
                     currentData.events=new ArrayList<>();
+                    currentData.userLabel = cursor.getString(cursor.getColumnIndexOrThrow("user_label"));
 
                     dataList.add(currentData);
                     lastDataId = dataId;

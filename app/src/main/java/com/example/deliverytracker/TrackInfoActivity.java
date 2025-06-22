@@ -40,6 +40,17 @@ public class TrackInfoActivity extends AppCompatActivity {
     private DataAdapter dataAdapter;
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("TrackInfo", "onActivityResult сработал, обновляем список!"); // для отладки
+        if (resultCode == RESULT_OK) {
+            dataAdapter.setdataList(databaseHelper.getAllDataWithEvents());
+        }
+    }
+
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -70,6 +81,8 @@ public class TrackInfoActivity extends AppCompatActivity {
             @Override public void afterTextChanged(Editable s) {}
         });
 
+
+
         // Диалоговое меню
         Button showDialogButton = findViewById(R.id.menuButton);
         showDialogButton.setOnClickListener(v -> showCustomDialog());
@@ -89,20 +102,22 @@ public class TrackInfoActivity extends AppCompatActivity {
                         List<TrackData> updatedDataList = databaseHelper.getAllDataWithEvents();
                         boolean exists = false;
                         for (TrackData data : updatedDataList) {
-                            if (response.status.equals("ok")) {
+                            if (data.trackCode.equals(response.data.trackCode)) {
+                                exists = true;
                                 databaseHelper.updateData(response.data);
+                                // Сначала удалить старые события этой посылки:
+                                databaseHelper.deleteEvents(data.trackCode);
+                                // Затем добавить новые:
                                 for (Event e : response.data.events) {
-                                    databaseHelper.updateEvent(e);
+                                    databaseHelper.insertEvent(e);
                                 }
                             }
-
                         }
                         if (!exists) {
                             databaseHelper.insertData(response.data);
                             for (Event e : response.data.events) {
-                                databaseHelper.updateEvent(e);
+                                databaseHelper.insertEvent(e);
                             }
-
                         }
                         // Обновляем список на экране
                         runOnUiThread(() -> {
@@ -123,6 +138,7 @@ public class TrackInfoActivity extends AppCompatActivity {
                 Toast.makeText(TrackInfoActivity.this, "Track number is invalid", Toast.LENGTH_LONG).show();
             }
         });
+
 
         // Авто-уведомление по ожидающим
         dataList.forEach(data -> {

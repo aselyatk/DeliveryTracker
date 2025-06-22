@@ -14,6 +14,9 @@ public class TrackData {
         this.lastPoint=lastpoint;
         this.awaitingStatus=awaiting;
     }
+    @SerializedName("userLabel")
+    public String userLabel; // Новое поле: название посылки от пользователя
+
     @SerializedName("awaitingStatus")
     public String awaitingStatus;
     @SerializedName("trackCode")
