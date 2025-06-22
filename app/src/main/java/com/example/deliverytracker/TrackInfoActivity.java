@@ -8,204 +8,197 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import android.text.Editable;
 import android.text.TextWatcher;
-
 import android.widget.TextView;
 import android.widget.Toast;
+import com.example.deliverytracker.models.Event;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.deliverytracker.Services.DataAdapter;
 import com.example.deliverytracker.Services.DatabaseHelper;
 import com.example.deliverytracker.Services.NotificationHelper;
-import com.example.deliverytracker.Services.TrackParser;
-import com.example.deliverytracker.Services.TrackingApiService;
 import com.example.deliverytracker.Services.TrackingNumberValidator;
 import com.example.deliverytracker.Services.TrackingRepository;
 import com.example.deliverytracker.models.TrackData;
 import com.example.deliverytracker.models.TrackResponse;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
+public class TrackInfoActivity extends AppCompatActivity {
 
-public class TrackInfoActivity extends AppCompatActivity
-{
     private EditText packageNumberInput;
     private Button searchButton;
     private DatabaseHelper databaseHelper;
     private RecyclerView recyclerView;
     private DataAdapter dataAdapter;
-    private TrackingApiService apiService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_track_info);
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Инициализация
         packageNumberInput = findViewById(R.id.packageNumberInput);
         searchButton = findViewById(R.id.searchButton);
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        databaseHelper = new DatabaseHelper(this);
+        TrackingRepository repository = new TrackingRepository();
 
-        EditText searchInput = findViewById(R.id.searchInput); // новый searchInput
+        // Загружаем треки из базы
+        List<TrackData> dataList = databaseHelper.getAllDataWithEvents();
+        dataAdapter = new DataAdapter(TrackInfoActivity.this, dataList);
+        recyclerView.setAdapter(dataAdapter);
+
+        // Поиск по списку
+        EditText searchInput = findViewById(R.id.searchInput);
         searchInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (dataAdapter != null) {
                     dataAdapter.filter(s.toString());
                 }
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(Editable s) {}
         });
 
-
-        databaseHelper = new DatabaseHelper(this);
-        TrackingRepository repository = new TrackingRepository();
-        List<TrackData> dataList = databaseHelper.getAllDataWithEvents();
-        List<TrackData>responseList=new ArrayList<TrackData>();
-        if (!dataList.isEmpty()) {
-            dataAdapter = new DataAdapter(TrackInfoActivity.this,dataList);
-            recyclerView.setAdapter(dataAdapter);
-
-        }
+        // Диалоговое меню
         Button showDialogButton = findViewById(R.id.menuButton);
         showDialogButton.setOnClickListener(v -> showCustomDialog());
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Получаем введенный номер посылки
-                String packageNumber = packageNumberInput.getText().toString();
 
-                // Логика для получения данных о посылке (это просто пример)
-                if (!packageNumber.isEmpty() && TrackingNumberValidator.check(packageNumber)) {
-
-                    repository.fetchTrackingData(packageNumber, new TrackingRepository.TrackingDataCallback() {
-                        @Override
-                        public void onSuccess(TrackResponse response) {
-                            if(!response.status.equals("ok"))
-                                Toast.makeText(TrackInfoActivity.this,response.message,Toast.LENGTH_LONG).show();
-                            System.out.println("Post execute");
-                            boolean rewrite=false;
-                            if(response.data.awaitingStatus.equals("1")){
-                                NotificationHelper.sendNotification(TrackInfoActivity.this, "Tracking Update", "Your package has arrived!");
-                            }
-                            if (dataList.isEmpty() && responseList.isEmpty()) {
-                                databaseHelper.insertData(response.data);
-
-                                response.data.events.forEach(e->{
-                                    databaseHelper.insertEvent(e);
-                                });
-
-                                responseList.add(response.data);
-                                dataAdapter = new DataAdapter(TrackInfoActivity.this,responseList);
-                                recyclerView.setAdapter(dataAdapter);
-
-                                System.out.println("NO Rewrite");
-
-
-                            } else if(dataList.isEmpty()) {
-
-                                for(TrackData data:responseList)
-                                    if(data.trackCode.equals(response.data.trackCode)){
-                                        data.lastPoint=response.data.lastPoint;
-                                        data.events=response.data.events;
-                                        databaseHelper.updateData(data);
-                                        data.events.forEach(e->{
-                                            databaseHelper.updateEvent(e);
-                                        });
-                                        rewrite=true;
-                                    }
-                                if(rewrite) {
-
-                                    System.out.println("ReWrite");
-                                    dataAdapter.setdataList(responseList);
-                                    dataAdapter.notifyDataSetChanged();
-                                }
-                            }else {
-                                for(TrackData data:dataList)
-                                    if(data.trackCode.equals(response.data.trackCode)){
-                                        data.lastPoint=response.data.lastPoint;
-                                        data.events=response.data.events;
-                                        databaseHelper.updateData(data);
-                                        data.events.forEach(e->{
-                                            databaseHelper.updateEvent(e);
-                                        });
-                                        rewrite=true;
-                                    }
-                                if(rewrite) {
-
-                                    System.out.println("ReWrite");
-                                    dataAdapter.setdataList(dataList);
-                                    dataAdapter.notifyDataSetChanged();
+        // Поиск новой посылки по трек-номеру
+        searchButton.setOnClickListener(v -> {
+            String packageNumber = packageNumberInput.getText().toString().trim();
+            if (!packageNumber.isEmpty() && TrackingNumberValidator.check(packageNumber)) {
+                repository.fetchTrackingData(packageNumber, new TrackingRepository.TrackingDataCallback() {
+                    @Override
+                    public void onSuccess(TrackResponse response) {
+                        if (!response.status.equals("ok")) {
+                            Toast.makeText(TrackInfoActivity.this, response.message, Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        // Проверяем есть ли уже такой трек
+                        List<TrackData> updatedDataList = databaseHelper.getAllDataWithEvents();
+                        boolean exists = false;
+                        for (TrackData data : updatedDataList) {
+                            if (response.status.equals("ok")) {
+                                databaseHelper.updateData(response.data);
+                                for (Event e : response.data.events) {
+                                    databaseHelper.updateEvent(e);
                                 }
                             }
-                            Log.d("TrackInfo", "Tracking number: " + response.data.trackCode);
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-                            Log.e("TrackInfo", "Error: " + t.getMessage());
 
                         }
-                    });
+                        if (!exists) {
+                            databaseHelper.insertData(response.data);
+                            for (Event e : response.data.events) {
+                                databaseHelper.updateEvent(e);
+                            }
 
+                        }
+                        // Обновляем список на экране
+                        runOnUiThread(() -> {
+                            dataAdapter.setdataList(databaseHelper.getAllDataWithEvents());
+                        });
 
+                        if (response.data.awaitingStatus.equals("1")) {
+                            NotificationHelper.sendNotification(TrackInfoActivity.this, "Tracking Update", "Your package has arrived!");
+                        }
+                    }
 
-                }else{
-                    Toast.makeText(TrackInfoActivity.this,"Track number is invalid",Toast.LENGTH_LONG).show();
-                    System.out.println("Post Track number is invalid\t"+packageNumber);
-                }
-
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.e("TrackInfo", "Error: " + t.getMessage());
+                    }
+                });
+            } else {
+                Toast.makeText(TrackInfoActivity.this, "Track number is invalid", Toast.LENGTH_LONG).show();
             }
-
         });
-        dataList.forEach(data->{
-            if(data.awaitingStatus.equals("1"))
-            {
+
+        // Авто-уведомление по ожидающим
+        dataList.forEach(data -> {
+            if (data.awaitingStatus.equals("1")) {
                 NotificationHelper.sendNotification(this, "Tracking Update", "Your package has arrived!");
             }
         });
 
+        // PULL-TO-REFRESH — свайп вниз
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            List<TrackData> currentList = databaseHelper.getAllDataWithEvents();
+            if (currentList.isEmpty()) {
+                swipeRefreshLayout.setRefreshing(false);
+                return;
+            }
+            TrackingRepository rep = new TrackingRepository();
+            int[] counter = {0};
+            for (TrackData track : currentList) {
+                rep.fetchTrackingData(track.trackCode, new TrackingRepository.TrackingDataCallback() {
+                    @Override
+                    public void onSuccess(TrackResponse response) {
+                        if (response.status.equals("ok")) {
+                            databaseHelper.updateData(response.data);
+                            for (Event e : response.data.events) {
+                                databaseHelper.updateEvent(e);
+                            }
 
+                        }
+                        counter[0]++;
+                        if (counter[0] == currentList.size()) {
+                            runOnUiThread(() -> {
+                                dataAdapter.setdataList(databaseHelper.getAllDataWithEvents());
+                                swipeRefreshLayout.setRefreshing(false);
+                                Toast.makeText(TrackInfoActivity.this, "Статусы обновлены!", Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        counter[0]++;
+                        if (counter[0] == currentList.size()) {
+                            runOnUiThread(() -> {
+                                dataAdapter.setdataList(databaseHelper.getAllDataWithEvents());
+                                swipeRefreshLayout.setRefreshing(false);
+                                Toast.makeText(TrackInfoActivity.this, "Статусы обновлены (ошибки возможны)!", Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                    }
+                });
+            }
+        });
     }
+
     private void showCustomDialog() {
-        // Создаем диалог
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_layout, null);
         builder.setView(dialogView);
 
-        // Настраиваем кнопки и текст
         TextView dialogText = dialogView.findViewById(R.id.dialog_text);
         Button dialogLink = dialogView.findViewById(R.id.dialog_link);
         Button deleteLink = dialogView.findViewById(R.id.DeleteLink);
 
         dialogLink.setOnClickListener(v -> {
-            // Переход в другую Activity
             Intent intent = new Intent(TrackInfoActivity.this, ProfileActivity.class);
             startActivity(intent);
         });
         deleteLink.setOnClickListener(v -> {
-            // Переход в другую Activity
             databaseHelper.deleteAllRecords();
-            List<TrackData> dataList = databaseHelper.getAllDataWithEvents();
-            dataAdapter.setdataList(dataList);
+            dataAdapter.setdataList(new ArrayList<>());
             dataAdapter.notifyDataSetChanged();
         });
-        // Отображаем диалог
+
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
 }

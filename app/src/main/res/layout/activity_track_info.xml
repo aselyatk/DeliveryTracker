@@ -7,7 +7,6 @@
     android:padding="16dp">
 
     <!-- Лейбл и поле ввода для номера посылки -->
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/menuButton"
         style="@style/Widget.Material3.Button"
@@ -16,22 +15,21 @@
         android:layout_marginTop="70dp"
         android:gravity="center_vertical|center_horizontal"
         android:text="..."
-        android:textSize="20sp"
-        />
+        android:textSize="20sp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Номер посылки"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-    <com.google.android.material.textfield.TextInputEditText
-    android:id="@+id/packageNumberInput"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="16dp"
-
-        android:inputType="text" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/packageNumberInput"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="16dp"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/searchButton"
         android:layout_width="wrap_content"
@@ -50,19 +48,21 @@
         android:hint="Поиск по трек-номеру"
         android:layout_marginBottom="10dp"
         android:drawableStart="@android:drawable/ic_menu_search"
-        android:inputType="text"
-        />
+        android:inputType="text" />
 
-
-    <!-- Блок для отображения информации о посылке -->
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <!-- Теперь здесь обернули RecyclerView в SwipeRefreshLayout -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:scrollbars="vertical"
-        />
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>
