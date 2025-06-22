@@ -10,27 +10,26 @@
     <ImageView
         android:id="@+id/arrowIcon"
         android:layout_marginTop="100dp"
-        android:layout_marginLeft="70dp"
-
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center"
         android:src="@drawable/user"
         android:scaleType="fitXY"
         />
     <TextView
         android:id="@+id/emailView"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:textSize="24dp"
-        android:text="User email :"/>
+        android:layout_gravity="center"
+        android:textSize="18dp"
+        android:text="User email:"/>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/Go_AppButton"
         android:layout_width="350dp"
         android:layout_height="70dp"
         android:text="Go to app"
+        android:textSize="20dp"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"
         />
@@ -39,6 +38,7 @@
         android:layout_width="350dp"
         android:layout_height="70dp"
         android:text="Logout"
+        android:textSize="20dp"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"
         android:layout_marginBottom="20dp"

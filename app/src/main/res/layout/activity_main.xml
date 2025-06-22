@@ -12,15 +12,18 @@
         android:layout_width="350dp"
         android:layout_height="70dp"
         android:text="Register"
+        android:textSize="20sp"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="200dp"/>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
         android:layout_width="350dp"
         android:layout_height="70dp"
-        android:text="Register"
+        android:text="Login"
+        android:textSize="20sp"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"
         android:layout_marginBottom="16dp" />

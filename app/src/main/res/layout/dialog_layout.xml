@@ -12,20 +12,24 @@
         android:layout_height="wrap_content"
         android:text="Меню"
         android:gravity="center_vertical|center_horizontal"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/dialog_link"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="Перейти в профиль"
+        android:textSize="20sp"
         android:gravity="center_vertical|center_horizontal"
         android:layout_marginTop="16dp" />
     <Button
         android:id="@+id/DeleteLink"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Удалитьвсе записи"
+        android:layout_gravity="center"
+        android:text="Удалить все записи"
+        android:textSize="20sp"
         android:gravity="center_vertical|center_horizontal"
         android:layout_marginTop="16dp" />
 </LinearLayout>
