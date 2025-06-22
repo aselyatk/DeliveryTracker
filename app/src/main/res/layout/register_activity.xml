@@ -14,7 +14,7 @@
         android:layout_height="80dp"
         android:layout_gravity="center"
         android:textSize="24dp"
-        android:text="Register"
+        android:text="Регистрация"
         android:textStyle="bold"/>
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="Пароль"
         android:layout_marginTop="1dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
@@ -48,9 +48,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/registerButton"
-        android:layout_width="350dp"
+        android:layout_width="310dp"
         android:layout_height="70dp"
-        android:text="Register"
+        android:text="Регистрация"
         android:textSize="20sp"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"
@@ -58,9 +58,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/go_to_LoginButton"
-        android:layout_width="350dp"
+        android:layout_width="310dp"
         android:layout_height="70dp"
-        android:text="already have account (Login)"
+        android:text="Уже есть аккаунт? (Войти)"
         android:textSize="20sp"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"

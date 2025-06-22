@@ -9,7 +9,7 @@
         android:id="@+id/trackingNumberTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tracking Number"
+        android:text="Трек-код"
         android:textSize="17sp"
         android:textColor="@color/cardview_light_background"
         android:textStyle="bold" />
@@ -19,7 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/cardview_light_background"
-        android:text="Events" />
+        android:layout_marginTop="15dp"
+        android:text="События" />
     <Button
         android:id="@+id/btnDetails"
         android:layout_width="wrap_content"
@@ -35,7 +36,8 @@
         android:layout_height="40dp"
         android:layout_gravity="right"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@android:drawable/ic_menu_delete"
+        android:src="@drawable/ic_delete"
+        android:tint="@color/white"
         android:contentDescription="Удалить"
         android:layout_marginStart="10dp"/>
 

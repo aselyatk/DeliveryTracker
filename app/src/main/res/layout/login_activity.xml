@@ -47,9 +47,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
-        android:layout_width="350dp"
+        android:layout_width="260dp"
         android:layout_height="70dp"
-        android:text="Login"
+        android:text="Войти"
         android:textSize="20sp"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"
@@ -57,9 +57,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/go_to_registerButton"
-        android:layout_width="350dp"
+        android:layout_width="260dp"
         android:layout_height="70dp"
-        android:text="no account (Register)"
+        android:text="Зарегистрироваться"
         android:textSize="20sp"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"

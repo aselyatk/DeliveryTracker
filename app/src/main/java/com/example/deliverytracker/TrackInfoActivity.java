@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import com.example.deliverytracker.Services.DataAdapter;
 import com.example.deliverytracker.Services.DatabaseHelper;
@@ -53,7 +54,6 @@ public class TrackInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_track_info);
 
         // Инициализация
@@ -81,11 +81,26 @@ public class TrackInfoActivity extends AppCompatActivity {
             @Override public void afterTextChanged(Editable s) {}
         });
 
+        MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
+        topAppBar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_profile) {
+                startActivity(new Intent(this, ProfileActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.action_delete_all) {
+                databaseHelper.deleteAllRecords();
+               // List<TrackData> dataList = databaseHelper.getAllDataWithEvents();
+                dataAdapter.setdataList(dataList);
+                dataAdapter.notifyDataSetChanged();
+                return true;
+            }
+            return false;
+        });
+
 
 
         // Диалоговое меню
-        Button showDialogButton = findViewById(R.id.menuButton);
-        showDialogButton.setOnClickListener(v -> showCustomDialog());
+//        Button showDialogButton = findViewById(R.id.menuButton);
+        //showDialogButton.setOnClickListener(v -> showCustomDialog());
 
         // Поиск новой посылки по трек-номеру
         searchButton.setOnClickListener(v -> {

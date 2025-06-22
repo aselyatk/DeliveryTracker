@@ -23,21 +23,22 @@
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:textSize="18dp"
-        android:text="User email:"/>
+        android:textStyle="bold"
+        android:text="Email:"/>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/Go_AppButton"
-        android:layout_width="350dp"
+        android:layout_width="260dp"
         android:layout_height="70dp"
-        android:text="Go to app"
+        android:text="Открыть"
         android:textSize="20dp"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"
         />
     <com.google.android.material.button.MaterialButton
         android:id="@+id/logoutButton"
-        android:layout_width="350dp"
+        android:layout_width="260dp"
         android:layout_height="70dp"
-        android:text="Logout"
+        android:text="Выйти из системы"
         android:textSize="20dp"
         android:layout_gravity="center_horizontal"
         style="@style/Widget.Material3.Button"
