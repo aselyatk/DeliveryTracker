@@ -152,6 +152,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteTrackByCode(String trackCode) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Удаляем сначала связанные события
+        db.delete(TABLE_EVENTS, COLUMN_DATA_ID + "=?", new String[]{trackCode});
+        // Потом сам трек
+        db.delete(TABLE_DATA, COLUMN_TRACKING_NUMBER + "=?", new String[]{trackCode});
+        db.close();
+    }
+
+
+
     // Получение всех событий
 
     public List<TrackData> getAllDataWithEvents() {

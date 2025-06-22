@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import java.util.ArrayList;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -67,6 +69,18 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
             context.startActivity(intent);
         });
 
+        holder.btnDelete.setOnClickListener(v -> {
+            // Удаление из БД
+            DatabaseHelper db = new DatabaseHelper(context);
+            db.deleteTrackByCode(data.trackCode);
+            // Удаление из списка адаптера
+            dataList.remove(position);
+            dataListFull.removeIf(item -> item.trackCode.equals(data.trackCode));
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, dataList.size());
+            Toast.makeText(context, "Посылка удалена", Toast.LENGTH_SHORT).show();
+        });
+
     }
 
     @Override
@@ -77,12 +91,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
     static class DataViewHolder extends RecyclerView.ViewHolder {
         TextView trackingNumberTextView, deliveryServiceTextView, eventsTextView;
         Button btnDetails;
+        ImageButton btnDelete;
+
 
         public DataViewHolder(@NonNull View itemView) {
             super(itemView);
             trackingNumberTextView = itemView.findViewById(R.id.trackingNumberTextView);
             btnDetails=itemView.findViewById(R.id.btnDetails);
-
+            btnDelete = itemView.findViewById(R.id.btnDelete);
             eventsTextView = itemView.findViewById(R.id.eventsTextView);
         }
     }
