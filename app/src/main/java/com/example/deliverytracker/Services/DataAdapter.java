@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,13 +22,16 @@ import java.util.List;
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder> {
 
     private List<TrackData> dataList;
+    private List<TrackData> dataListFull;
     private Context context;
     public DataAdapter(Context context,List<TrackData> dataList) {
         this.dataList = dataList;
+        this.dataListFull = new ArrayList<>(dataList);
         this.context=context;
     }
     public void setdataList(List<TrackData> dataList){
         this.dataList = dataList;
+        this.dataListFull = new ArrayList<>(dataList); // обновляем и полный!
         notifyDataSetChanged();
     }
     @NonNull
@@ -81,4 +86,22 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
             eventsTextView = itemView.findViewById(R.id.eventsTextView);
         }
     }
+    // Фильтрация:
+    public void filter(String text) {
+        List<TrackData> filteredList = new ArrayList<>();
+        if (text.isEmpty()) {
+            filteredList.addAll(dataListFull);
+        } else {
+            String filterPattern = text.toLowerCase().trim();
+            for (TrackData item : dataListFull) {
+                if (item.trackCode.toLowerCase().contains(filterPattern)) {
+                    filteredList.add(item);
+                }
+            }
+        }
+        dataList.clear();
+        dataList.addAll(filteredList);
+        notifyDataSetChanged();
+    }
+
 }

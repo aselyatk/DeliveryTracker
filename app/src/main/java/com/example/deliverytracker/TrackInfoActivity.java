@@ -1,8 +1,5 @@
 package com.example.deliverytracker;
 
-
-
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.AlertDialog;
@@ -11,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +52,23 @@ public class TrackInfoActivity extends AppCompatActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         packageNumberInput = findViewById(R.id.packageNumberInput);
         searchButton = findViewById(R.id.searchButton);
+
+        EditText searchInput = findViewById(R.id.searchInput); // новый searchInput
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (dataAdapter != null) {
+                    dataAdapter.filter(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
 
         databaseHelper = new DatabaseHelper(this);
         TrackingRepository repository = new TrackingRepository();
